@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .button-group {
+            margin-bottom: 20px;
+        }
+        #markdownContent {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #markdownContent.loaded {
+            border: 4px solid grey;
+        }
+        #markdownContent pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        #markdownContent code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Node.js App</h1>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Welcome Message</h2>
+                        <div class="form-group">
+                            <input type="text" id="firstName" class="form-control" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="lastName" class="form-control" placeholder="Last Name">
+                        </div>
+                        <button class="btn btn-primary" onclick="getWelcomeMessage()">Get Welcome Message</button>
+                        <p id="welcomeMessage" class="mt-3"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Convert Celsius to Fahrenheit</h2>
+                        <div class="form-group">
+                            <input type="number" id="celsius" class="form-control" placeholder="Celsius">
+                        </div>
+                        <button class="btn btn-primary" onclick="convertCelsius()">Convert</button>
+                        <p id="convertedValue" class="mt-3"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Factorial Calculation</h2>
+                        <div class="form-group">
+                            <input type="number" id="number" class="form-control" placeholder="Number">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateFactorial()">Calculate</button>
+                        <p id="mathResult" class="mt-3"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2>Markdown and Text File Preview</h2>
+                <div class="form-group">
+                    <input type="file" id="markdownFile" class="form-control-file">
+                    <small class="form-text text-muted">Please select any 📒Markdown(.md) or 📑Text (.txt) File to Preview</small>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="uploadMarkdownFile()">Preview File</button>
+                    <button class="btn btn-secondary" onclick="loadDefaultFile()">Load Default File</button>
+                </div>
+                <div id="markdownContent" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getWelcomeMessage() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const response = await fetch(`/api/welcome?firstName=${firstName}&lastName=${lastName}`);
+            const message = await response.text();
+            document.getElementById('welcomeMessage').innerText = message;
+        }
+
+        async function convertCelsius() {
+            const value = document.getElementById('celsius').value;
+            const response = await fetch(`/api/convert?value=${value}`);
+            const convertedValue = await response.text();
+            document.getElementById('convertedValue').innerText = convertedValue;
+        }
+
+        async function calculateFactorial() {
+            const number = document.getElementById('number').value;
+            const response = await fetch(`/api/math?number=${number}`);
+            const result = await response.text();
+            document.getElementById('mathResult').innerText = result;
+        }
+
+        async function uploadMarkdownFile() {
+            const fileInput = document.getElementById('markdownFile');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('markdownFile', file);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const content = await response.text();
+            const markdownContent = document.getElementById('markdownContent');
+            markdownContent.innerHTML = content;
+            markdownContent.classList.add('loaded');
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+            makeLinksOpenInNewTab();
+        }
+
+        async function loadDefaultFile() {
+            const response = await fetch('/api/default');
+            const content = await response.text();
+            const markdownContent = document.getElementById('markdownContent');
+            markdownContent.innerHTML = content;
+            markdownContent.classList.add('loaded');
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+            makeLinksOpenInNewTab();
+        }
+
+        function makeLinksOpenInNewTab() {
+            const links = document.querySelectorAll('#markdownContent a');
+            links.forEach(link => {
+                link.setAttribute('target', '_blank');
+            });
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+</body>
+</html>
