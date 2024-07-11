@@ -42,7 +42,7 @@ If you do not have them installed, follow these steps:
 3. **Install the necessary modules:**
 
     ```sh
-    npm install express express-fileupload path fs/promises file-url-to-path marked
+    npm install express express-fileupload path marked
     ```
 
 ### Running the Application
