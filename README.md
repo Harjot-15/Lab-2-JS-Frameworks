@@ -2,7 +2,7 @@
 
 # Lab 2 - JS Frameworks
 
-# 📽️ [@Demo Video](https://georgiancollege-my.sharepoint.com/:v:/r/personal/200545258_student_georgianc_on_ca/Documents/Assets/Lab2-JS-Fameworks%20.mp4?csf=1&web=1&e=TNwKE1&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
+# 📽️ [@Demo Video](https://georgiancollege-my.sharepoint.com/:v:/g/personal/200545258_student_georgianc_on_ca/EY4FcUNH5hpCrL4SM3LsB8ABvOt9onqTUxr22ovweaVwlg?e=uOrCnj)
 
 This project is a simple Node.js application built with Express.js and related packages.
 
