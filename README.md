@@ -1,4 +1,4 @@
-Sure, I'll add the necessary steps and links for installing Git, Node.js, and npm to the project instructions.
+
 
 # Lab 2 - JS Frameworks
 
